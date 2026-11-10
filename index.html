@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Collective Forensics · Eridu Fabric Manager (concept)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header id="topHeader">
+  <div class="hdr">
+    <a class="logo" href="#" aria-label="Eridu"><img src="assets/logo-ondark.svg" alt="Eridu, Faster AI"></a>
+    <nav id="nav" aria-label="Fabric Manager">
+      <a href="#">Fabric</a>
+      <a href="#">Domains</a>
+      <a href="#">Telemetry</a>
+      <a href="#" class="on">Forensics</a>
+      <a href="#">Timing</a>
+    </nav>
+    <div class="hdr-meta" id="hdrMeta"></div>
+  </div>
+</header>
+
+<section class="band"><h1>Collective Forensics</h1></section>
+
+<main class="wrap">
+  <section class="intro">
+    <div>
+      <div class="eyebrow">Scale-up domain SU-01 · MoE dispatch all-to-all</div>
+      <h2 class="lead">When a collective runs slow, name the xPU, port or expert that cost the time, and prove it.</h2>
+      <p class="lede">Every slow all-to-all is replayed against three counterfactuals: re-time the latest sender, rebalance the hottest destination, restore the slowest port. Start times come from each NIC's PTP clock, so every saving carries a ±2ε interval from the clock's error bound. A cause is named only when its whole interval wins; otherwise the verdict is an honest "clock too loose to tell".</p>
+    </div>
+    <div class="clock">
+      <div class="clock-h">PTP error bound <span class="nc">ε</span></div>
+      <div class="seg" id="clockSeg" role="tablist"></div>
+      <div class="clock-note" id="clockNote"></div>
+    </div>
+  </section>
+
+  <section class="kpis" id="kpis"></section>
+
+  <section class="row2">
+    <div class="panel">
+      <div class="ph"><h3>Domain</h3><span class="sub" id="domSub"></span></div>
+      <svg id="dom" viewBox="0 0 640 300" role="img" aria-label="Domain racks"></svg>
+      <div class="legend" id="domLegend"></div>
+    </div>
+    <div class="panel">
+      <div class="ph"><h3>Slow collectives</h3><label class="toggle"><input type="checkbox" id="showTruth"> <span>Show injected cause</span></label></div>
+      <div class="filters" id="filters"></div>
+      <div class="tbl-wrap"><table class="tbl" id="incTbl"></table></div>
+    </div>
+  </section>
+
+  <section class="panel detail" id="detail"></section>
+
+  <section class="row2">
+    <div class="panel">
+      <div class="ph"><h3>Clock-error budget</h3><span class="sub" id="sweepSub">Replaying every step at 13 clock bounds…</span></div>
+      <svg id="sweep" viewBox="0 0 620 330" role="img" aria-label="Attribution vs clock error"></svg>
+      <div class="legend" id="sweepLegend"></div>
+      <p class="note" id="sweepNote"></p>
+    </div>
+    <div class="panel">
+      <div class="ph"><h3>How the verdict is made</h3></div>
+      <ol class="how">
+        <li><b>Fluid replay.</b> The switch's byte counters give the full xPU-to-xPU traffic matrix; port rates come from link state. Completion of the all-to-all is computed exactly for an output-queued single-hop fabric (last-bit departure per destination port).</li>
+        <li><b>Three counterfactuals.</b> Re-time the latest-starting senders to the median start, rebalance the hottest destination to the median load, restore the slowest port. Each saving is "how much sooner the collective would have finished".</li>
+        <li><b>Clock-error intervals.</b> Completion is non-decreasing and 1-Lipschitz in every start time, so a saving computed from starts that are each off by at most ε is within ±2ε of the true saving. No distributional assumption.</li>
+        <li><b>Verdict.</b> Name a cause only if its lower bound clears <span id="thTxt"></span> and beats every other upper bound. Below threshold everywhere is "no fault". Anything else abstains.</li>
+      </ol>
+      <div class="model" id="modelBox"></div>
+    </div>
+  </section>
+
+  <footer class="foot">Unofficial concept demo by Mohith Gajjela. Not affiliated with Eridu. Synthetic data from a seeded fluid model of a single-hop scale-up switch.</footer>
+</main>
+<div class="tip" id="tip"></div>
+<script type="module" src="assets/app.js"></script>
+</body>
+</html>
